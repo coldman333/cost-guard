@@ -1,0 +1,60 @@
+    <!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Берегова охорона</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <div id="hud">
+    <div class="hud-row">
+      <div class="hud-cell"><span class="hud-label">ОЧКИ</span><span id="hud-score">000000</span></div>
+      <div class="hud-cell"><span class="hud-label">ХВИЛЯ</span><span id="hud-wave">1</span></div>
+      <div class="hud-cell"><span class="hud-label">ЖИТТЯ</span><span id="hud-lives">★★★</span></div>
+      <div class="hud-cell"><span class="hud-label">× ШВИДК</span><span id="hud-speed">×1.00</span></div>
+    </div>
+    <div id="hud-message" class="hidden"></div>
+  </div>
+
+  <div id="controls">
+    <button id="btn-pause"   title="Пауза (P)">⏸</button>
+    <button id="btn-aim"     title="Приціл на воді (A)">✛</button>
+    <button id="btn-debug"   title="Debug-маркери (D)">🎯</button>
+    <button id="btn-restart" title="Рестарт (R)">↻</button>
+  </div>
+
+  <div id="instructions">
+    <div><b>БЕРЕГОВА ОХОРОНА</b></div>
+    <div>Миша — наводити • Клік або Space — постріл</div>
+    <div>Стрілки — точне наведення • A — приціл • D — debug-маркери • P — пауза • R — рестарт</div>
+  </div>
+
+  <div id="pause-overlay" class="overlay hidden">
+    <div class="overlay-panel">
+      <h2>ПАУЗА</h2>
+      <button id="btn-resume">Продовжити</button>
+    </div>
+  </div>
+
+  <div id="gameover-overlay" class="overlay hidden">
+    <div class="overlay-panel">
+      <h2>ГРУ ЗАВЕРШЕНО</h2>
+      <p>Очки: <span id="final-score">0</span></p>
+      <p>Хвиля: <span id="final-wave">0</span></p>
+      <button id="btn-restart-overlay">Розпочати знову</button>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

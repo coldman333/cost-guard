@@ -11,8 +11,8 @@ const BALANCE = {
   worldHalfWidth: 80,
 
   cannon: {
-    minPitch: 8  * Math.PI / 180,
-    maxPitch: 82 * Math.PI / 180,
+    minPitch: 3  * Math.PI / 180,
+    maxPitch: 45 * Math.PI / 180,
     maxYaw:   70 * Math.PI / 180,
     aimSpeed: 1.4,
     cooldown: 0.5,
@@ -25,7 +25,7 @@ const BALANCE = {
     spawnIntervalBase: 2.8,
     spawnIntervalMin: 0.9,
     spawnIntervalShrink: 0.93,
-    zLanes: [28, 42, 58, 75],
+    zLanes: [32, 46, 62, 78],
   },
 
   wave: {
@@ -689,6 +689,8 @@ class Game {
     mound.position.set(0, 0.3, 0);
     this.scene.add(mound);
 
+    this._buildBlindZoneLine();
+
     const hillMat = new THREE.MeshLambertMaterial({ color: 0x44603a });
     for (let i = -3; i <= 3; i++) {
       const h = new THREE.Mesh(
@@ -698,6 +700,38 @@ class Game {
       h.position.set(i * 28 + rand(-4, 4), 0, rand(110, 130));
       this.scene.add(h);
     }
+  }
+
+  // Computes where a shot fired at minPitch (flattest angle) lands for every yaw in [-maxYaw, +maxYaw].
+  // The arc shows the minimum landing range — ships closer than this curve can only be hit
+  // while the projectile is still in flight (it passes through them before landing).
+  _buildBlindZoneLine() {
+    const { maxYaw, minPitch } = BALANCE.cannon;
+    const g  = BALANCE.gravity;
+    const v0 = BALANCE.projectileSpeed;
+    // Approximate muzzle height at low pitch (pitchPivot y≈2.15, barrel mostly forward)
+    const y0 = 2.5;
+    const N  = 64;
+
+    const pts = [];
+    for (let i = 0; i <= N; i++) {
+      const yaw = lerp(-maxYaw, maxYaw, i / N);
+      const vx  = v0 * Math.cos(minPitch) * Math.sin(yaw);
+      const vy  = v0 * Math.sin(minPitch);
+      const vz  = v0 * Math.cos(minPitch) * Math.cos(yaw);
+      const t   = (vy + Math.sqrt(vy * vy + 2 * g * y0)) / g;
+      pts.push(new THREE.Vector3(vx * t, 0.1, vz * t));
+    }
+
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat = new THREE.LineDashedMaterial({
+      color: 0x00e040,
+      dashSize: 2.5,
+      gapSize: 1.5,
+    });
+    const line = new THREE.Line(geo, mat);
+    line.computeLineDistances();
+    this.scene.add(line);
   }
 
   _mkCrosshair(color) {

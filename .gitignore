@@ -1,0 +1,22 @@
+node_modules/
+dist/
+build/
+
+# Environment variables
+.env
+.env.*
+!/.env.example
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.sod
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-error.log*

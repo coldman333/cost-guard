@@ -749,6 +749,7 @@ class Game {
     document.getElementById('btn-pause')           .addEventListener('click', () => this.togglePause());
     document.getElementById('btn-aim')             .addEventListener('click', () => this.toggleAimHelper());
     document.getElementById('btn-debug')           .addEventListener('click', () => this.toggleDebug());
+    document.getElementById('btn-sound')           .addEventListener('click', () => this.toggleSound());
     document.getElementById('btn-restart')         .addEventListener('click', () => this.restart());
     document.getElementById('btn-resume')          .addEventListener('click', () => this.togglePause());
     document.getElementById('btn-restart-overlay') .addEventListener('click', () => this.restart());
@@ -757,9 +758,15 @@ class Game {
       if      (e.code === 'KeyP') this.togglePause();
       else if (e.code === 'KeyA') this.toggleAimHelper();
       else if (e.code === 'KeyD') this.toggleDebug();
+      else if (e.code === 'KeyS') this.toggleSound();
       else if (e.code === 'KeyR') this.restart();
     });
+
+    // Initial state
+    document.getElementById('btn-sound').classList.add('active');
+    document.getElementById('btn-sound').textContent = '🔊';
   }
+
 
   // ---------- стани гри ----------
   togglePause() {
@@ -773,6 +780,13 @@ class Game {
     document.getElementById('btn-debug').classList.toggle('active', this.debug);
     if (!this.debug) this._clearInterceptMarkers();
   }
+
+  toggleSound() {
+    this.audio.enabled = !this.audio.enabled;
+    document.getElementById('btn-sound').classList.toggle('active', this.audio.enabled);
+    document.getElementById('btn-sound').textContent = this.audio.enabled ? '🔊' : '🔇';
+  }
+
 
   toggleAimHelper() {
     this.aimHelper = !this.aimHelper;
